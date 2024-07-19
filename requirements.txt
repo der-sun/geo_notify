@@ -1,0 +1,7 @@
+Flask==3.0.3
+SQLAlchemy==2.0.31
+geopy==2.4.1
+python-telegram-bot==21.3
+pytest==8.2.2
+gmplot==1.4.1
+folium==0.17.0
