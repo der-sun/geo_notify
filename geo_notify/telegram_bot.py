@@ -1,4 +1,3 @@
-# telegram_bot.py
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 from config import TELEGRAM_API_KEY
