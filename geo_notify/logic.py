@@ -1,19 +1,15 @@
+# geo_notify/logic.py
 from database import Session, PointOfInterest
-from geopy.distance import geodesic
 
-def add_point(name, latitude, longitude):
+def add_point(user_id, name, latitude, longitude):
     session = Session()
-    point = PointOfInterest(name=name, latitude=latitude, longitude=longitude)
+    point = PointOfInterest(user_id=user_id, name=name, latitude=latitude, longitude=longitude)
     session.add(point)
     session.commit()
     session.close()
 
-def check_in_radius(user_location, point_location, radius):
-    return geodesic(user_location, point_location).meters <= radius
-
-def mark_point_as_visited(point_id):
+def get_points(user_id):
     session = Session()
-    point = session.query(PointOfInterest).get(point_id)
-    point.visited = True
-    session.commit()
+    points = session.query(PointOfInterest).filter(PointOfInterest.user_id == user_id).all()
     session.close()
+    return points

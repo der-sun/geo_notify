@@ -14,15 +14,14 @@ def send_telegram_message(chat_id, message):
     return response.json()
 
 def check_in_radius(user_location, point_location, radius):
-    # Преобразование всех значений в float для сравнения
     user_location = (float(user_location[0]), float(user_location[1]))
     point_location = (float(point_location[0]), float(point_location[1]))
     radius = float(radius)
     return geodesic(user_location, point_location).meters <= radius
 
-def notify_user_of_points(chat_id, user_location):
+def notify_user_of_points(user_id, chat_id, user_location):
     session = Session()
-    points = session.query(PointOfInterest).all()
+    points = session.query(PointOfInterest).filter(PointOfInterest.user_id == user_id).all()
     for point in points:
         point_location = (point.latitude, point.longitude)
         if check_in_radius(user_location, point_location, RADIUS):

@@ -1,27 +1,28 @@
-import os
-from sqlalchemy import create_engine, Column, Integer, Float, String, Boolean
+# geo_notify/database.py
+from sqlalchemy import create_engine, Column, Integer, Float, String, Boolean, BIGINT
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from config import DATABASE_URL
 
-from config import DATABASE_URL  # Абсолютный импорт
-
-# Создаем движок SQLAlchemy для работы с базой данных PostgreSQL
-engine = create_engine(DATABASE_URL)
-Session = sessionmaker(bind=engine)
+# Создаем базовый класс для всех моделей
 Base = declarative_base()
 
-# Инициализация базы данных
-def init_db():
-    Base.metadata.create_all(engine)
-
-# Определяем модель точки интереса
 class PointOfInterest(Base):
-    __tablename__ = 'pointsofinterest'
+    __tablename__ = 'points_of_interest'
+    
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    latitude = Column(Float)
-    longitude = Column(Float)
+    user_id = Column(BIGINT, nullable=False)
+    name = Column(String, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
     visited = Column(Boolean, default=False)
 
+# Создаем движок для подключения к базе данных PostgreSQL
+engine = create_engine(DATABASE_URL)
 
-    ##TODO: add datatime variable for checking in offline mode && history
+# Создаем объект Session для работы с базой данных
+Session = sessionmaker(bind=engine)
+
+def init_db():
+    # Создаем все таблицы в базе данных
+    Base.metadata.create_all(engine)
